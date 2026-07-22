@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,261 +8,282 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.Typography
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.myapplication.ui.theme.MyApplicationTheme
 
+// Part A: Define the theme
+private val LightColors = lightColorScheme(
+    primary = Color(0xFF771C1B),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFE9C9C8),
+    secondary = Color(0xFF9E4744),
+    surface = Color(0xFFFFFBFF),
+    onSurfaceVariant = Color(0xFF5A4D4C)
+)
 
-// Midnight & Aurora theme: Deep Navy and Neon Teal for a modern, unique look
-private val Primary = Color(0xFF0F172A)
-private val Accent = Color(0xFF2DD4BF)
-private val AccentDark = Color(0xFF0D9488)
-private val PageTop = Color(0xFFF8FAFC)
-private val PageBottom = Color(0xFFE2E8F0)
-private val PageTopDark = Color(0xFF020617)
-private val PageBottomDark = Color(0xFF0F172A)
+private val DarkColors = darkColorScheme(
+    primary = Color(0xFFE0A3A0),
+    onPrimary = Color(0xFF511313),
+    primaryContainer = Color(0xFF651817),
+    secondary = Color(0xFFD49B99),
+    surface = Color(0xFF1A1110),
+    onSurfaceVariant = Color(0xFFC9B8B7)
+)
+
+@Composable
+fun ProfileTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = if (darkTheme) DarkColors else LightColors
+    MaterialTheme(
+        colorScheme = colors,
+        typography = Typography(),
+        shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp)),
+        content = content
+    )
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        BusinessCard()
-                    }
-                }
+            ProfileTheme {
+                ProfileScreen()
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BusinessCard() {
-    // Read the system theme once, then derive every color from it
-    val isDark = isSystemInDarkTheme()
-
-    val cardBackground = if (isDark) Color(0xFF111827) else Color.White
-    val contentColor = if (isDark) Color.White else Primary
-    val subtitleColor = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)
-    val dividerColor = if (isDark) Color(0xFF1F2937) else Color(0xFFE2E8F0)
-    val labelColor = if (isDark) Color(0xFFE2E8F0) else Color(0xFF1E293B)
-
-    // Name color: Solid black for light mode, solid white for dark mode
-    val nameGradient = if (isDark) {
-        Brush.linearGradient(listOf(Color.White, Color.White))
-    } else {
-        Brush.linearGradient(listOf(Color.Black, Color.Black))
-    }
-
-    val pageGradient = if (isDark) {
-        Brush.verticalGradient(listOf(PageTopDark, PageBottomDark))
-    } else {
-        Brush.verticalGradient(listOf(PageTop, PageBottom))
-    }
-
-    // Dark mode gets a deeper, more muted version of the banner so it
-    // blends with the near-black card instead of looking pasted on top
-    val bannerGradient = if (isDark) {
-        Brush.linearGradient(listOf(Primary, Color(0xFF1E293B), Color(0xFF020617)))
-    } else {
-        Brush.linearGradient(listOf(AccentDark, Accent, Color(0xFF5EEAD4)))
-    }
-    val glowAlpha = if (isDark) 0.22f else 0.45f
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(pageGradient)
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(28.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = cardBackground,
-                contentColor = contentColor
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
+fun ProfileScreen() {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { 
+                    Text(
+                        "My Profile", 
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    ) 
+                },
+                navigationIcon = {
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Default.MoreVert, contentDescription = "More")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-                // Diagonal gradient banner behind the photo
+            // Region B: Avatar + Status Badge
+            Box(contentAlignment = Alignment.BottomEnd) {
+                Image(
+                    painter = painterResource(id = R.drawable.picnirr),
+                    contentDescription = "Avatar",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                )
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                        .background(
-                            bannerGradient,
-                            RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    // Soft glow behind the avatar for depth
-                    Box(
-                        modifier = Modifier
-                            .size(140.dp)
-                            .clip(CircleShape)
-                            .background(
-                                Brush.radialGradient(
-                                    listOf(Accent.copy(alpha = glowAlpha), Color.Transparent)
-                                )
-                            )
-                    )
-                    Image(
-                        painter = painterResource(R.drawable.picnirr),
-                        contentDescription = "Profile photo",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(112.dp)
-                            .clip(CircleShape)
-                            .border(4.dp, Color.White, CircleShape)
-                    )
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                Text(
-                    "Rain Robert Bacabis",
-                    style = TextStyle(
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        brush = nameGradient
-                    )
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .background(Color.Green)
+                        .border(2.dp, Color.White, CircleShape)
                 )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    "3rd Year IT Student",
-                    fontSize = 14.sp,
-                    color = subtitleColor
-                )
-
-                Spacer(Modifier.height(20.dp))
-                HorizontalDivider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    thickness = 1.dp,
-                    color = dividerColor
-                )
-                Spacer(Modifier.height(20.dp))
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                ) {
-                    ContactRow(Icons.Default.Phone, "+63 992 213 9708", labelColor = labelColor)
-                    ContactRow(Icons.Default.Email, "rbacabis24725@liceo.edu.ph", labelColor = labelColor)
-                }
-
-                Spacer(Modifier.height(20.dp))
             }
-        }
-    }
-}
 
-@Composable
-fun ContactRow(
-    icon: ImageVector,
-    label: String,
-    labelColor: Color = Color(0xFF3A3A3A),
-    onClick: () -> Unit = {}
-) {
-    Surface(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp),
-        shape = RoundedCornerShape(14.dp),
-        color = Color.Transparent
-    ) {
-        Row(
-            modifier = Modifier
-                .background(
-                    Brush.horizontalGradient(
-                        listOf(Accent.copy(alpha = 0.09f), Accent.copy(alpha = 0.015f))
-                    )
+            // Region C: Name and Role
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Rain Robert Bacabis",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
                 )
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .background(Brush.linearGradient(listOf(Accent, AccentDark))),
-                contentAlignment = Alignment.Center
+                Text(
+                    text = "Android Developer",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            // Region D: Row of weighted buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Icon(
-                    icon,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(18.dp)
-                )
+                Button(
+                    onClick = { },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Message")
+                }
+                OutlinedButton(
+                    onClick = { },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Follow")
+                }
             }
-            Spacer(Modifier.width(12.dp))
-            Text(label, fontSize = 15.sp, color = labelColor)
+
+            // Region E: Stats Card
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    StatItem("128", "Posts")
+                    StatItem("4.2k", "Followers")
+                    StatItem("96", "Following")
+                }
+            }
+
+            // Region F: Info Card
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    InfoRow(icon = Icons.Default.Email, text = "rbacabis24725@liceo.edu.ph")
+                    InfoRow(icon = Icons.Default.LocationOn, text = "CDO,IPONAN")
+                }
+            }
         }
     }
 }
 
-@Preview(showBackground = true, name = "Light")
 @Composable
-fun BusinessCardPreview() {
-    MyApplicationTheme {
-        BusinessCard()
+fun StatItem(number: String, label: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = number,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
 @Composable
-fun BusinessCardPreviewDark() {
-    MyApplicationTheme {
-        BusinessCard()
+fun InfoRow(icon: ImageVector, text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
-@Preview(showBackground = true, fontScale = 1.8f, name = "Large Font")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
-fun BusinessCardPreviewLargeFont() {
-    MyApplicationTheme {
-        BusinessCard()
+fun ProfilePreview() {
+    ProfileTheme(darkTheme = false) {
+        ProfileScreen()
+    }
+}
+
+@Preview(showBackground = true, name = "Dark Mode")
+@Composable
+fun ProfilePreviewDark() {
+    ProfileTheme(darkTheme = true) {
+        ProfileScreen()
     }
 }
