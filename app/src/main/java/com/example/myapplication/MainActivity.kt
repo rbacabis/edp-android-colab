@@ -6,47 +6,43 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Class
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -55,7 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-// Part A: Define the theme
+
 private val LightColors = lightColorScheme(
     primary = Color(0xFF771C1B),
     onPrimary = Color(0xFFFFFFFF),
@@ -94,196 +90,202 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ProfileTheme {
-                ProfileScreen()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.surface
+                ) {
+                    ProfileScreen()
+                }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen() {
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { 
-                    Text(
-                        "My Profile", 
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    ) 
-                },
-                navigationIcon = {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+    val isDark = isSystemInDarkTheme()
+    
+
+    val backgroundBrush = if (isDark) {
+        Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFF2D0B0A),
+                Color(0xFF120504)
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
-        }
-    ) { paddingValues ->
+        )
+    } else {
+        Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFFFFF5F5),
+                Color(0xFFF7E2E1)
+            )
+        )
+    }
+
+    Box(modifier = Modifier.fillMaxSize().background(backgroundBrush)) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                            Color.Transparent
+                        )
+                    ),
+                    shape = RoundedCornerShape(bottomStart = 160.dp, bottomEnd = 160.dp)
+                )
+        )
+
         Column(
             modifier = Modifier
-                .padding(paddingValues)
-                .padding(16.dp)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.Top
         ) {
-            // Region B: Avatar + Status Badge
-            Box(contentAlignment = Alignment.BottomEnd) {
+            Spacer(Modifier.height(60.dp))
+
+
+            Box(
+                modifier = Modifier
+                    .size(140.dp)
+                    .background(
+                        color = Color.White.copy(alpha = 0.2f),
+                        shape = CircleShape
+                    )
+                    .padding(8.dp)
+                    .background(
+                        Brush.sweepGradient(
+                            listOf(MaterialTheme.colorScheme.primary, Color.White, MaterialTheme.colorScheme.primary)
+                        ),
+                        CircleShape
+                    )
+                    .padding(3.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(2.dp)
+                    .clip(CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.picnirr),
-                    contentDescription = "Avatar",
+                    contentDescription = "Profile Picture",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                )
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(CircleShape)
-                        .background(Color.Green)
-                        .border(2.dp, Color.White, CircleShape)
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
-            // Region C: Name and Role
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Rain Robert Bacabis",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Android Developer",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            Spacer(Modifier.height(20.dp))
 
-            // Region D: Row of weighted buttons
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Button(
-                    onClick = { },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Message")
-                }
-                OutlinedButton(
-                    onClick = { },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Follow")
-                }
-            }
+            Text(
+                text = "Rain Robert Bacabis",
+                style = MaterialTheme.typography.headlineSmall,
+                color = if (isDark) MaterialTheme.colorScheme.primary else Color.White,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Text(
+                text = "BSIT 3-2",
+                style = MaterialTheme.typography.titleMedium,
+                color = if (isDark) MaterialTheme.colorScheme.onSurfaceVariant else Color.White.copy(alpha = 0.8f),
+                fontWeight = FontWeight.Medium
+            )
 
-            // Region E: Stats Card
+            Spacer(Modifier.height(40.dp))
+
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
                 ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    StatItem("128", "Posts")
-                    StatItem("4.2k", "Followers")
-                    StatItem("96", "Following")
-                }
-            }
-
-            // Region F: Info Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
+                shape = RoundedCornerShape(32.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    modifier = Modifier.padding(24.dp)
                 ) {
-                    InfoRow(icon = Icons.Default.Email, text = "rbacabis24725@liceo.edu.ph")
-                    InfoRow(icon = Icons.Default.LocationOn, text = "CDO,IPONAN")
+                    InfoRow(
+                        icon = Icons.Default.Person,
+                        label = "Full Name",
+                        value = "Rain Robert Bacabis"
+                    )
+                    InfoRow(
+                        icon = Icons.Default.School,
+                        label = "Course",
+                        value = "BSIT"
+                    )
+                    InfoRow(
+                        icon = Icons.Default.Class,
+                        label = "Section",
+                        value = "BSIT 3-2"
+                    )
+                    InfoRow(
+                        icon = Icons.Default.Phone,
+                        label = "Mobile Number",
+                        value = "+63 992 213 9708"
+                    )
+                    InfoRow(
+                        icon = Icons.Default.Email,
+                        label = "Email Address",
+                        value = "rbacabis24725@liceo.edu.ph"
+                    )
                 }
             }
         }
     }
 }
 
-@Composable
-fun StatItem(number: String, label: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = number,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
 
 @Composable
-fun InfoRow(icon: ImageVector, text: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+fun InfoRow(icon: ImageVector, label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(20.dp)
+            contentDescription = label,
+            tint = MaterialTheme.colorScheme.primary
         )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Spacer(Modifier.width(16.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
     }
 }
 
-@Preview(showBackground = true, name = "Light Mode")
+
+@Preview(showBackground = true, name = "Profile - Light")
 @Composable
 fun ProfilePreview() {
     ProfileTheme(darkTheme = false) {
-        ProfileScreen()
+        Surface(color = MaterialTheme.colorScheme.surface) {
+            ProfileScreen()
+        }
     }
 }
 
-@Preview(showBackground = true, name = "Dark Mode")
+@Preview(showBackground = true, name = "Profile - Dark")
 @Composable
 fun ProfilePreviewDark() {
     ProfileTheme(darkTheme = true) {
-        ProfileScreen()
+        Surface(color = MaterialTheme.colorScheme.surface) {
+            ProfileScreen()
+        }
     }
 }
