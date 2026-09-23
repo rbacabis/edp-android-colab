@@ -4,17 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
-    compileSdk {
-        version = release(37) {
-            minorApiLevel = 1
-        }
-    }
+    namespace = "edu.liceo.fieldkit"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "edu.liceo.fieldkit"
         minSdk = 32
-        targetSdk = 37
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -47,6 +43,15 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camerax.compose)
+
+    implementation(libs.play.services.location)
+
     implementation(libs.espresso.core)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

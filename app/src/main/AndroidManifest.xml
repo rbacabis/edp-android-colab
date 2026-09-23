@@ -2,6 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- TODO 1a: uses-permission CAMERA (runtime) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- TODO 1b: uses-permission ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- TODO 1c: uses-permission VIBRATE (normal, used by the bonus) -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- TODO 1d: uses-feature android.hardware.camera with required="false" -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
